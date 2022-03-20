@@ -1,0 +1,78 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: lightblue;
+}
+.cargaProd {
+  width: 80%;
+  margin: auto;
+  margin-top: 5rem;
+}
+
+.cargaProd input,
+#busqueda {
+  height: 3rem;
+  width: 14rem;
+  border: 0.5px black solid;
+  margin-top: 1rem;
+}
+.contenedor {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  margin: 2rem 0;
+  justify-content: space-between;
+}
+button {
+  width: 5rem;
+  font-size: 22px;
+  background-color: aqua;
+  margin-top: 1rem;
+}
+
+h1 {
+  text-align: center;
+  font-size: 36px;
+}
+/*estilos caja de busqueda*/
+#busqueda {
+  height: 3rem;
+  width: 30rem;
+  border: 0.5px black solid;
+  margin: 2rem auto;
+}
+/* estilos de las card */
+.contenedor {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+}
+.card {
+  background-color: white;
+  margin: 1rem;
+  border: 1px solid black;
+  width: 25rem;
+}
+.card h3 {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 1rem;
+}
+.card p {
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.btnCompra {
+  background-color: orangered;
+  font-weight: bold;
+  text-align: center;
+  width: 40%;
+  height: 3rem;
+  margin: 1rem 30%;
+}
