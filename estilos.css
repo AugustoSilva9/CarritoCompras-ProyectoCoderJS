@@ -76,3 +76,23 @@ h1 {
   height: 3rem;
   margin: 1rem 30%;
 }
+
+/*carrito*/
+.carritoItem {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 4rem;
+  background-color: white;
+  font-size: 24px;
+}
+.w-33 {
+  width: 33%;
+  text-align: center;
+}
+.contenedorColumna {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+}

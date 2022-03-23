@@ -5,7 +5,7 @@ let precio = document.getElementById('precio');
 let cargar = document.getElementById('cargar');
 let seccionProd = document.getElementById('productos')
 let buscar = document.getElementById('busqueda')
-
+let carritoSeccion = document.getElementById('carrito')
 
 //crear clase producto
 let productos = [];
@@ -19,13 +19,14 @@ class Producto {
         this.cantidad = parseInt(cantidad);
         this.precioIva = parseFloat(precio * 1.21);
         this.stock = stock;
+        this.carrito = 0;
     }
     sumarIva() {
         this.precioIva = (this.precio * 1.21);
     }
     cambiarStock(){
         this.stock = !this.stock;
-    } 
+    }
 }
 
 productos.push(new Producto(1, "Moto G60", 50000, 3));
@@ -93,10 +94,47 @@ const limpiar = () => {
     cantidad.value = "";
     precio.value = "";
 }
+let carrito = [];
 
+
+function totalCarrito(carrito){
+   const total = carrito.reduce((acc, el) => acc + el.precioIva, 0)
+    console.log(total)
+    return total;
+}
+function mostrarCarrito(carrito){
+    for (const prod of carrito) {
+        let prodCarrito = document.createElement('div')
+        prodCarrito.innerHTML = `<h3 class="w-33">${prod.nombre}</h3> 
+                                <p class="w-33">$${prod.precioIva}</p> 
+                                <p class="w-33">${prod.carrito}</p>`;
+        carritoSeccion.append(prodCarrito);
+        prodCarrito.classList.add('carritoItem')
+    }
+    let totalC = totalCarrito(carrito)
+    let total = document.createElement('div');
+    total.innerHTML = `<h3 class="w-33">TOTAL</h3>
+    <p class="w-33">${totalC}</p>`;
+    carritoSeccion.append(total);
+    total.classList.add('carritoItem')
+}
+//le paso la cantidad y agrego el producto al carrito 
+function agregarACarrito(producto){
+    let cantidadcarrito = 1;
+    producto.carrito = cantidadcarrito;
+    carrito.push(producto)
+    console.log(carrito[(carrito.length - 1)].nombre , carrito[(carrito.length - 1)].carrito )
+    console.log(carrito);
+    carritoSeccion.innerHTML = '';
+    mostrarCarrito(carrito)
+}
+//asigno el click a los botones y llamo a la funcion que agrega al carrito
 const eventoComprar = (productos) => {
     for (const producto of productos) {
-        document.getElementById(`prod-${producto.id}`).addEventListener('click', () => {console.log(producto.nombre)})
+        document.getElementById(`prod-${producto.id}`).addEventListener('click', () => {
+            console.log(producto);
+            agregarACarrito(producto);
+        })
     }
 }
 
@@ -126,7 +164,7 @@ mostrarProductos(productos)
 
 
 //---------------------------------------------------------
-const busqueda = productos.filter((el) => el.nombre.includes(`MOTO`));
+/* const busqueda = productos.filter((el) => el.nombre.includes(`MOTO`));
 console.log(`Busqueda de productos que contengan MOTO en el nombre ${JSON.stringify(busqueda)}`);
 
 const valor = productos.filter((el) => el.precio <= 100000);
@@ -137,3 +175,4 @@ valor.forEach((el) => {console.log(el.nombre , el.precio)})
 const faltantes = productos.filter((el) => el.stock == false);
 console.log(`faltante ${JSON.stringify(faltantes)}`)
 
+ */
