@@ -6,6 +6,9 @@
 body {
   background-color: lightblue;
 }
+.oculto {
+  display: none;
+}
 .cargaProd {
   width: 80%;
   margin: auto;
@@ -75,6 +78,22 @@ h1 {
   width: 40%;
   height: 3rem;
   margin: 1rem 30%;
+}
+.cantidadProd {
+  width: 50%;
+  margin: 1rem auto;
+}
+.cantidadProd button {
+  width: 25%;
+  height: 3rem;
+  font-weight: bold;
+}
+.cantidadProd input {
+  width: 50%;
+  height: 3rem;
+  font-weight: bold;
+  font-size: 2rem;
+  text-align: center;
 }
 
 /*carrito*/
