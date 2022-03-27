@@ -10,7 +10,6 @@ let carritoSeccion = document.getElementById('carrito')
 //crear clase producto
 let productos = [];
 
-
 class Producto {
     constructor(id, nombre, precio, cantidad, stock = true){
         this.id = parseInt(id);
@@ -52,11 +51,11 @@ const imprimir = (productos) =>{
             <p>Precio + IVA: $${producto.precioIva}</p>
             <p>Cantidad disponible ${producto.cantidad}</p>
             <button id="prod-${producto.id}" class="btnCompra">Comprar</button>
-            <div id="cantidad-${producto.id}" class="cantidadProd oculto"><button>-</button><input type="number" readonly value="1"><button>+</button></div>`
+            <div id="cantidad-${producto.id}" class="cantidadProd oculto"><button id="menos-${producto.id}">-</button><input type="number" readonly id="cant-${producto.id}" value="1"><button id="mas-${producto.id}">+</button></div>`//en el input de la cantidad tendria que ir producto.carrito
             card.classList.add('card')
             seccionProd.append(card);
-            
-        }else{
+            eventoMasMenosCantidad(producto.id)
+        }/* else{
             let card = document.createElement('div');
             card.innerHTML = `<h3>${producto.nombre}</h3>
             <p>Precion: $${producto.precio}</p>
@@ -65,7 +64,7 @@ const imprimir = (productos) =>{
             <button id="prod-${producto.id}" class="btnCompra">Comprar</button>`;
             card.classList.add('card')
             seccionProd.append(card);    
-         }
+         } */
     }
     eventoComprar(productos)
 }
@@ -77,9 +76,6 @@ function cargarProd(){
         let pcio = precio.value;
         let cant = cantidad.value;
         let stock = true;
-        if(cant == 0){
-            stock = false;
-        }
         productos.push(new Producto(id, nombre, pcio, cant, stock));
         seccionProd.innerHTML = "";
         limpiar();
@@ -95,46 +91,46 @@ const limpiar = () => {
     cantidad.value = "";
     precio.value = "";
 }
-
 //funciones del carrito
 let carrito = [];
-
 
 function totalCarrito(carrito){
    const total = carrito.reduce((acc, el) => acc + el.precioIva, 0)
     return total;
 }
 
-function EliminarCarrito(valor){
+function eliminarCarrito(valor){
    const eliminarProd = carrito.findIndex((el) => el.id === valor)
-   console.log(eliminarProd)
    carrito.splice(eliminarProd, 1)
    mostrarCarrito(carrito) 
 }
 
 function eventoEiminarCarrito(carrito){
     for (const producto of carrito) {
-        document.getElementById(`eliminar-${producto.id}`).addEventListener('click', (e)=> {
-        let prodBorrar = parseInt(e.target.value);
+        document.getElementById(`eliminar-${producto.id}`).addEventListener('click', ()=> {
+        let prodBorrar = parseInt(producto.id);
         console.log(prodBorrar)
-        EliminarCarrito(prodBorrar)
-        btnCantidad(producto)
+        eliminarCarrito(prodBorrar)
+        btnCantidad(producto.id)
     })
     }
     
 }
-
-function mostrarCarrito(carrito){
-    carritoSeccion.innerHTML = '';
+function imprimirCarrito (carrito){
     for (const prod of carrito) {
         let prodCarrito = document.createElement('div')
         prodCarrito.innerHTML = `<h3 class="w-33">${prod.nombre}</h3> 
                                 <p class="w-33">$${prod.precioIva}</p> 
-                                <p class="w-33">${prod.carrito}</p>
+                                <p id="cantEnCarrito-${prod.id}"class="w-33">${prod.carrito}</p>
                                 <button id="eliminar-${prod.id}" value="${prod.id}">Eliminar</button>`;
         carritoSeccion.append(prodCarrito);
         prodCarrito.classList.add('carritoItem')
     }
+}
+
+function mostrarCarrito(carrito){
+    carritoSeccion.innerHTML = '';
+    imprimirCarrito(carrito)
     eventoEiminarCarrito(carrito)
     let totalC = totalCarrito(carrito)
     let total = document.createElement('div');
@@ -144,31 +140,57 @@ function mostrarCarrito(carrito){
     total.classList.add('carritoItem')
 }
 //le paso la cantidad y agrego el producto al carrito 
-function agregarACarrito(producto){
-    let cantidadcarrito = 1;
-    producto.carrito = cantidadcarrito;
-    carrito.push(producto)
-    console.log(carrito[(carrito.length - 1)].nombre , carrito[(carrito.length - 1)].carrito )
-    console.log(carrito);
-    mostrarCarrito(carrito)
+function cantidadCarritoModif (producto, modificacion=true){
+    let cantModificada = producto.carrito;
+    modificacion ? cantModificada++ : cantModificada--;
+    producto.carrito = cantModificada;
+    console.log(producto)
 }
 
+function agregarACarrito(producto){
+    cantidadCarritoModif(producto)
+    carrito.push(producto)
+    mostrarCarrito(carrito)
+}
 
 //asigno el click a los botones y llamo a la funcion que agrega al carrito
 const eventoComprar = (productos) => {
     for (const producto of productos) {
         document.getElementById(`prod-${producto.id}`).addEventListener('click', () => {
-            console.log(producto);
-            let ocultarBtn = document.getElementById(`prod-${producto.id}`)
-           btnCantidad(producto)
+            btnCantidad(producto.id)
             agregarACarrito(producto);
         })
     }
 }
+// funcion botones mas menos falta ver como oculto cuando dice 1 sin mostrar el 0
+function masMenosCantidad ( id, sumaResta){
+    let input = document.getElementById(`cant-${id}`);
+    //let cantEnCarrito =  document.getElementById(`cantEnCarrito-${id}`)
+    let cantidad = input.value;
+    const resetear = 1;
+    cantidad = parseInt(cantidad);
+    sumaResta ? cantidad++ : cantidad-- ;
+    if(cantidad === 0){
+        btnCantidad(id)
+        cantidad = resetear ;
+        input.value = cantidad;
+        eliminarCarrito(id)
+    }else{
+        input.value = cantidad;
+        console.log(input.value + ' else')
+       /*  cantEnCarrito.innerHTML = ""
+        cantEnCarrito.append(input.value) */
+    }
+}
 
-function btnCantidad({id}){
-    const btnCompra = document.getElementById(`prod-${id}`)
-    const btnCantidad = document.getElementById(`cantidad-${id}`)
+const eventoMasMenosCantidad = (id) => {   
+        document.getElementById(`mas-${id}`).addEventListener('click', () => {masMenosCantidad(id, true)})
+        document.getElementById(`menos-${id}`).addEventListener('click', () => {masMenosCantidad(id, false)})
+}
+
+function btnCantidad(id){
+    let btnCompra = document.getElementById(`prod-${id}`)
+    let btnCantidad = document.getElementById(`cantidad-${id}`)
     if(btnCantidad.classList.contains('oculto')){
         btnCompra.classList.add('oculto')
         btnCantidad.classList.remove('oculto')
@@ -178,7 +200,6 @@ function btnCantidad({id}){
     }
 }
 
-
 // filtrar los productos que quiero ver
 buscar.addEventListener('input', (e) => {
     let prodABuscar = e.target.value;
@@ -186,7 +207,6 @@ buscar.addEventListener('input', (e) => {
     const filtro = productos.filter((prod) => prod.nombre.includes(prodABuscar));
     seccionProd.innerHTML = "";
     imprimir(filtro);
-
 })
 
 cargar.addEventListener('click', cargarProd)
