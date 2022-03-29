@@ -157,6 +157,10 @@ function agregarACarrito(producto){
 const eventoComprar = (productos) => {
     for (const producto of productos) {
         document.getElementById(`prod-${producto.id}`).addEventListener('click', () => {
+            Toastify({
+                text: "tu producto se agrego al carrito",
+                duration: 3000
+                }).showToast();
             btnCantidad(producto.id)
             agregarACarrito(producto);
         })
@@ -226,4 +230,9 @@ valor.forEach((el) => {console.log(el.nombre , el.precio)})
 const faltantes = productos.filter((el) => el.stock == false);
 console.log(`faltante ${JSON.stringify(faltantes)}`)
 
- */
+     Toastify({
+        text: "This is a toast",
+        duration: 3000
+        }).showToast();
+
+*/
