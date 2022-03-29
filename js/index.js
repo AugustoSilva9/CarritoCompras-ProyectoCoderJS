@@ -143,7 +143,7 @@ function mostrarCarrito(carrito){
 function cantidadCarritoModif (producto, modificacion=true){
     let cantModificada = producto.carrito;
     modificacion ? cantModificada++ : cantModificada--;
-    producto.carrito = cantModificada;
+    producto.carrito = parseInt(cantModificada);
     console.log(producto)
 }
 
