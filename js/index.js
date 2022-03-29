@@ -18,7 +18,7 @@ class Producto {
         this.cantidad = parseInt(cantidad);
         this.precioIva = parseFloat(precio * 1.21);
         this.stock = stock;
-        this.carrito = 0;
+        this.carrito = parseInt(0);
     }
     sumarIva() {
         this.precioIva = (this.precio * 1.21);
