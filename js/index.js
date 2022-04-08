@@ -66,16 +66,7 @@ const imprimir = (productos) =>{
             card.classList.add('card')
             seccionProd && seccionProd.append(card);
             eventoMasMenosCantidad(producto)
-        }/* else{
-            let card = document.createElement('div');
-            card.innerHTML = `<h3>${producto.nombre}</h3>
-            <p>Precion: $${producto.precio}</p>
-            <p>Precio + IVA: $${producto.precioIva}</p>
-            <p>(sin stock)</p>
-            <button id="prod-${producto.id}" class="btnCompra">Comprar</button>`;
-            card.classList.add('card')
-            seccionProd.append(card);    
-         } */
+        }
     }
     eventoComprar(productos)
 }
@@ -109,18 +100,23 @@ function totalCarrito(carrito){
     return total;
 }
 
-function eliminarCarrito(valor){
-   const eliminarProd = carrito.findIndex((el) => el.id === valor)
+function eliminarCarrito(prod){
+   const eliminarProd = carrito.findIndex((el) => el.id === prod.id)
    carrito.splice(eliminarProd, 1)
+   prod.carrito = 0;
+   let input = document.getElementById(`cant-${prod.id}`);
+   input.value = prod.carrito
    localStorage.setItem("carrito", JSON.stringify(carrito))
    carritoStorage();
    mostrarCarrito(carrito) 
+   console.log(carrito)
+   console.log(prod)
 }
 
 function eventoEiminarCarrito(carrito){
     for (const producto of carrito) {
         document.getElementById(`eliminar-${producto.id}`).addEventListener('click', ()=> {
-            eliminarCarrito(producto.id)
+            eliminarCarrito(producto)
             btnCantidad(producto.id)
         })
     }
@@ -156,8 +152,10 @@ function cantidadCarritoModif (producto, modificacion=true){
 }
 
 function agregarACarrito(producto){
+    console.log(producto)
     cantidadCarritoModif(producto)
     console.log(typeof(producto.carrito))
+    console.log(producto)
     carrito.push(producto)
     localStorage.setItem("carrito", JSON.stringify(carrito))
     carritoStorage();
@@ -173,8 +171,11 @@ const eventoComprar = (productos) => {
                 text: "tu producto se agrego al carrito",
                 duration: 3000
                 }).showToast();
-            btnCantidad(producto.id)
+            producto.carrito = 0;    
             agregarACarrito(producto);
+            btnCantidad(producto.id)
+            let input = document.getElementById(`cant-${producto.id}`);
+            input.value = producto.carrito
         })
     }
 }
@@ -190,23 +191,19 @@ function checkCantidad(prod, sumaResta) {
 function masMenosCantidad ( producto, sumaResta){
     let input = document.getElementById(`cant-${producto.id}`);
     producto.carrito = checkCantidad(producto, sumaResta);
-    let cantidad = input.value;
     console.log(producto)
     console.log(producto.carrito)
-    cantidad = parseInt(producto.carrito);
+    let cantidad = parseInt(producto.carrito);
     localStorage.setItem("carrito", JSON.stringify(carrito))
     carritoStorage();
-    //sumaResta ? cantidad++ : cantidad-- ;
     if(cantidad === 0){
+        //cambio el +/- por el boton comprar y elimino el elemento del carrito
+        input.value = cantidad;
         btnCantidad(producto.id)
-/*         cantidad = resetear ;
-        input.value = cantidad; */
-        eliminarCarrito(producto.id)
+        eliminarCarrito(producto)
     }else{
         input.value = cantidad;
         console.log(input.value + ' else')
-       /*  cantEnCarrito.innerHTML = ""
-        cantEnCarrito.append(input.value) */
     }
 }
 
@@ -230,7 +227,7 @@ function btnCantidad(id){
 let botonCarrito = document.getElementById('car');
 botonCarrito && (botonCarrito.onclick = () => {console.log('hola pag')});
 
-let ver = document.getElementById('mos');
+let ver = document.getElementById('verCarrito');
 if(ver){
 ver.addEventListener('click',() => {
     console.log(carrito)
@@ -253,7 +250,14 @@ console.log(productos);
 console.log(carrito);
 
 imprimir(productos)
-
+//cuando empieza la pagina chekeo si hay algo en el carrito para mostrar el boton comprar o el +/-
+if(carrito.length != 0){
+    for (const prod of carrito) {
+        btnCantidad(prod.id)
+        let input = document.getElementById(`cant-${prod.id}`);
+        input.value = prod.carrito;
+    }
+}
 
 
 
