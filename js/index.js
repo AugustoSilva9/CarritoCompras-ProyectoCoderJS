@@ -6,7 +6,8 @@ let cargar = document.getElementById('cargar');
 let seccionProd = document.getElementById('productos')
 let buscar = document.getElementById('busqueda')
 let carritoSeccion = document.getElementById('carrito')
-
+let nroCarrito = document.getElementById('nroCarrito')
+let iconoCarrito = document.getElementById('iconoCarrito')
 //crear clase producto
 let productos = [];
 let carrito = [];
@@ -86,6 +87,19 @@ function cargarProd(){
         imprimir(productos);
 
 }
+let dolar = []
+const valorDolar = async () => {
+    const resp = await fetch('https://www.dolarsi.com/api/api.php?type=valoresprincipales');
+    const data = await resp.json();
+    console.log(data) 
+    dolar.push(...data)
+    let valor
+    for (const d of dolar) {
+        d.casa.nombre == "Dolar Blue" && (valor = d.casa.venta)
+    }
+    console.log(valor)
+    return valor   
+}
 //reseteo los input 
 const limpiar = () => {
     codigo.value = "";
@@ -98,6 +112,16 @@ const limpiar = () => {
 function totalCarrito(carrito){
    const total = carrito.reduce((acc, el) => acc + el.precioIva, 0)
     return total;
+}
+async function totalEnDolares (tot){
+    console.log(tot);
+    const dolar = await valorDolar();
+    console.log(dolar)
+    let totalUSD = (tot / parseFloat(dolar));
+    console.log(totalUSD)
+    totalUSD = totalUSD.toFixed(2);
+    console.log(totalUSD)
+    return totalUSD //ver esta fuction para calcular el total del dolar me falta llamarla y pasarle el param
 }
 
 function eliminarCarrito(prod){
@@ -118,6 +142,7 @@ function eventoEiminarCarrito(carrito){
         document.getElementById(`eliminar-${producto.id}`).addEventListener('click', ()=> {
             eliminarCarrito(producto)
             btnCantidad(producto.id)
+            notificacionCarrito()
         })
     }
 }
@@ -133,16 +158,24 @@ function imprimirCarrito (carrito){
     }
 }
 
-function mostrarCarrito(carrito){
+async function mostrarCarrito(carrito){
     carritoSeccion && (carritoSeccion.innerHTML = '') ;
     imprimirCarrito(carrito)
     eventoEiminarCarrito(carrito)
     let totalC = totalCarrito(carrito)
     let total = document.createElement('div');
+    let totalUDS = await totalEnDolares(totalC)
+    
+    console.log(totalUDS)
+    let totalDolar = document.createElement('div');
     total.innerHTML = `<h3 class="w-33">TOTAL</h3>
     <p class="w-33">${totalC}</p>`;
+    totalDolar.innerHTML = `<h3 class="w-33">TOTAL UDS</h3>
+    <p class="w-33">${totalUDS}</p>`
     carritoSeccion.append(total);
     total.classList.add('carritoItem')
+    carritoSeccion.append(totalDolar);
+    totalDolar.classList.add('carritoItem')
 }
 //le paso la cantidad y agrego el producto al carrito 
 function cantidadCarritoModif (producto, modificacion=true){
@@ -176,6 +209,7 @@ const eventoComprar = (productos) => {
             btnCantidad(producto.id)
             let input = document.getElementById(`cant-${producto.id}`);
             input.value = producto.carrito
+            notificacionCarrito()
         })
     }
 }
@@ -224,12 +258,10 @@ function btnCantidad(id){
     }
 }
 
-let botonCarrito = document.getElementById('car');
-botonCarrito && (botonCarrito.onclick = () => {console.log('hola pag')});
 
-let ver = document.getElementById('verCarrito');
-if(ver){
-ver.addEventListener('click',() => {
+
+if(iconoCarrito){
+    iconoCarrito.addEventListener('click',() => {
     console.log(carrito)
     console.log(carritoSeccion)
     mostrarCarrito(carrito)
@@ -259,8 +291,13 @@ if(carrito.length != 0){
     }
 }
 
+//iconoCarrito.addEventListener('click', )
+const notificacionCarrito = () => {
+    nroCarrito.innerHTML = carrito.length;
+}
+notificacionCarrito()
 
-
+valorDolar()
 //---------------------------------------------------------
 /* const busqueda = productos.filter((el) => el.nombre.includes(`MOTO`));
 console.log(`Busqueda de productos que contengan MOTO en el nombre ${JSON.stringify(busqueda)}`);

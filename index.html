@@ -18,6 +18,66 @@
     <title>Productos</title>
 </head>
 <body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+        <!-- Container wrapper -->
+        <div class="container-fluid w90">
+            <!-- Toggle button -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- Navbar brand -->
+                <a class="navbar-brand mt-2 mt-lg-0" href="#">
+                    <img
+                    src="https://mdbcdn.b-cdn.net/img/logo/mdb-transaprent-noshadows.webp"
+                    height="15"
+                    alt="MDB Logo"
+                    loading="lazy"
+                    />
+                </a>
+                <!-- Left links -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Team</a>
+                    </li>
+                    <li class="nav-item">
+                    <a class="nav-link" href="#">Projects</a>
+                    </li>
+                </ul>
+                <!-- Left links -->
+            </div>
+            <!-- Collapsible wrapper -->
+
+            <!-- Right elements -->
+            <div class="d-flex align-items-center">
+                <!-- Icon -->
+                <a id="iconoCarrito" class="text-reset me-3 " href="#carrito">
+                    <i class="fas fa-shopping-cart fa-2x"></i>
+                    <span id="nroCarrito" class="badge rounded-pill badge-notification bg-danger notifCarrito">1</span>
+                </a>
+            </div>
+            <!-- Right elements -->
+        </div>
+        <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+
+
+
     <section class="cargaProd">
         <div class="contenedor">
             <input id="codigo" type="text" placeholder="codigo">
