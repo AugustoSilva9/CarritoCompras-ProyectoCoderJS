@@ -116,8 +116,10 @@ function totalCarrito(carrito){
 async function totalEnDolares (tot){
     console.log(tot);
     const dolar = await valorDolar();
-    console.log(dolar)
-    let totalUSD = (tot / parseFloat(dolar));
+    console.log(dolar.replace(',','.'))
+    let dolarParseado = dolar.replace(',','.')
+    dolarParseado = parseFloat(dolarParseado)
+    let totalUSD = (tot / parseFloat(dolarParseado));
     console.log(totalUSD)
     totalUSD = totalUSD.toFixed(2);
     console.log(totalUSD)
