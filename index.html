@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -49,10 +49,21 @@
                 <!-- Left links -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                    <a class="nav-link" href="#">Dashboard</a>
+                    <a id="inicio" class="nav-link" href="#">Inicio</a>
                     </li>
-                    <li class="nav-item">
-                    <a class="nav-link" href="#">Team</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"  data-mdb-toggle="dropdown" aria-expanded="false"> Productos </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                          <li>
+                            <a id="celulares" class="dropdown-item" href="#">Celulares </a>
+                          </li>
+                          <li>
+                            <a id="notebook" class="dropdown-item" href="#">Notebook</a>
+                          </li>
+                          <li>
+                            <a id="smartwatch" class="dropdown-item" href="#">Smartwatch</a>
+                          </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                     <a class="nav-link" href="#">Projects</a>
@@ -65,7 +76,7 @@
             <!-- Right elements -->
             <div class="d-flex align-items-center">
                 <!-- Icon -->
-                <a id="iconoCarrito" class="text-reset me-3 " href="#carrito">
+                <a id="iconoCarrito" class="text-reset me-3 " href="#">
                     <i class="fas fa-shopping-cart fa-2x"></i>
                     <span id="nroCarrito" class="badge rounded-pill badge-notification bg-danger notifCarrito">1</span>
                 </a>
@@ -78,7 +89,7 @@
 
 
 
-    <section class="cargaProd">
+    <section class="cargaProd oculto">
         <div class="contenedor">
             <input id="codigo" type="text" placeholder="codigo">
             <input id="descripcion" type="text" placeholder="Descripcion">
@@ -87,26 +98,50 @@
             <button id="cargar">Cargar</button>
         </div>
     </section>
-
-    <section class="contenedor">
-        <input id="busqueda" type="text" placeholder="Buscar producto">
-    </section>
-
-    <h1>Productos</h1>
-    <section id="productos" class="contenedor">
+    
+    <div id="paginaCompleta">
+        <section class="contenedor w90">
+            <input id="busqueda" type="text" placeholder="Buscar producto ">
+        </section>
         
-    </section>
+        <h1>Productos</h1>
+        <section id="productos" class="contenedor w90">
+            
+        </section>
+    </div>
+    <div id="carritoCompleto" class="oculto">
+        <h1>Carrito</h1>
+        <section id="carrito" class="contenedorColumna w90">
+            
+        </section>
 
-    <button type="text" id="verCarrito">Ver carrito</button>
-    <h1>Carrito</h1>
-    <section id="carrito" class="contenedorColumna">
-
-    </section>
+        <div class="w90 d-flex justify-content-end">
+            <button type="button" id="finalCompra" class="btnFinalCompra" data-mdb-toggle="modal"  data-mdb-target="#metodoPago"> Finalizar Compra</button>
+        </div>
+        <div class="modal fade" id="metodoPago" tabindex="-1" aria-hidden="true">
+        <div  class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Metodo de Pago</h5>
+                  <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div id="cuerpoModal" class="modal-body"></div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
 
 
     <!-- MDB -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.js" async></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js" async></script>
+    <script src="./js/variables.js" async></script>
+    <script src="./js/funciones.js" async></script>
     <script src="./js/index.js" async></script>
 </body>
 </html>

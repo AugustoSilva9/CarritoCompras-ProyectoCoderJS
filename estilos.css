@@ -7,13 +7,16 @@ body {
   background-color: lightblue;
 }
 .oculto {
-  display: none;
+  display: none !important;
 }
 
 .w90{
-  width: 90%;
+  width: 90% !important ;
   padding: 0;
-  margin: 0 auto;
+  margin: 0 auto !important ;
+}
+.navbar{
+  height: 5rem;
 }
 .notifCarrito{
   height: 1.2rem;
@@ -32,13 +35,6 @@ body {
   width: 14rem;
   border: 0.5px black solid;
   margin-top: 1rem;
-}
-.contenedor {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  margin: 2rem 0;
-  justify-content: space-between;
 }
 button {
   width: 5rem;
@@ -69,19 +65,23 @@ h1 {
   background-color: white;
   margin: 1rem;
   border: 1px solid black;
-  width: 25rem;
+  width: 20rem;
 }
 .card h3 {
   text-align: center;
-  font-size: 36px;
-  margin-bottom: 1rem;
+  font-size: 26px;
+  margin-bottom: 0.8rem;
 }
 .card p {
-  font-size: 24px;
+  font-size: 14px;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 0.5rem;
 }
-
+.card img{
+  width: 100%;
+  height: 16rem;
+}
 .btnCompra {
   background-color: orangered;
   font-weight: bold;
@@ -120,9 +120,14 @@ h1 {
 .w-33 {
   width: 33%;
   text-align: center;
+  margin: auto;
 }
 .contenedorColumna {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
+}
+.btnFinalCompra{
+  width: 15%;
+  font-weight: 500;
 }

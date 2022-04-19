@@ -1,4 +1,4 @@
-let codigo = document.getElementById('codigo');
+/* let codigo = document.getElementById('codigo');
 let descripcion = document.getElementById('descripcion');
 let cantidad = document.getElementById('cantidad');
 let precio = document.getElementById('precio');
@@ -8,6 +8,9 @@ let buscar = document.getElementById('busqueda')
 let carritoSeccion = document.getElementById('carrito')
 let nroCarrito = document.getElementById('nroCarrito')
 let iconoCarrito = document.getElementById('iconoCarrito')
+let paginaCompleta = document.getElementById('paginaCompleta')
+let carritoCompleto = document.getElementById('carritoCompleto')
+let inicio = document.getElementById('inicio')
 //crear clase producto
 let productos = [];
 let carrito = [];
@@ -33,9 +36,9 @@ class Producto {
 productos.push(new Producto(1, "Moto G60", 50000, 3));
 productos.push(new Producto(2, "A22", 45000, 6));
 productos.push(new Producto(3, "Moto G100", 89000, 0));
-productos.push(new Producto(4, "Notebook Lenovo", 195000, 1));
-
-function actualizarStorage(){
+productos.push(new Producto(4, "Notebook Lenovo", 195000, 1)); */
+/* let dolar = [] */
+/* function actualizarStorage(){
     if(!localStorage.getItem("listaDeProductos")){
         localStorage.setItem("listaDeProductos", JSON.stringify(productos))
     } else{
@@ -52,28 +55,57 @@ function carritoStorage(){
         console.log(carrito)
     }
 }
-carritoStorage();
+carritoStorage(); */
 //imprimir las card de los productos
-const imprimir = (productos) =>{
+function crearCard (producto){
+    let card = document.createElement('div')
+    card.innerHTML = `<img src="http://starcomputacion.com.ar/library/timthumb/timthumb.php?src=/imagenes/productos/21229907306084a6309f807_4.jpg&w=366&h=297&zc=2" alt="">
+    <h3>${producto.nombre}</h3>
+    <p>Precion: $${producto.precio}</p>
+    <p>Precio + IVA: $${producto.precioIva}</p>
+    <p>Cantidad disponible ${producto.cantidad}</p>
+    <button id="prod-${producto.id}" class="btnCompra">Comprar</button>
+    <div id="cantidad-${producto.id}" class="cantidadProd oculto"><button id="menos-${producto.id}">-</button><input type="number" readonly id="cant-${producto.id}" value="1"><button id="mas-${producto.id}">+</button></div>`//en el input de la cantidad tendria que ir producto.carrito
+    card.classList.add('card')
+    seccionProd && seccionProd.append(card);
+}
+function controlProductos(carrito, productos){
+    if(carrito.length == 0){
+        for (const el of productos) {
+            el.carrito = 0;
+        }
+    }else{
+        for (const prod of carrito) {
+                for (const el of productos) {
+                if(prod.id == el.id){
+                    el.carrito = prod.carrito;
+                    console.log(prod.carrito)
+                    console.log(el.carrito)
+                }
+            }//poner una bandera que cambie si lo encuentra y modifica .carito sino lo reseteo
+        }
+    }
+    console.log(carrito)
+    console.log(productos)
+}
+function imprimir(productos) {
+    controlProductos(carrito, productos)
+    seccionProd.innerHTML = "";
     for (const producto of productos) {       
-        if(producto.stock == true){
-            let card = document.createElement('div')
-            card.innerHTML = `<h3>${producto.nombre}</h3>
-            <p>Precion: $${producto.precio}</p>
-            <p>Precio + IVA: $${producto.precioIva}</p>
-            <p>Cantidad disponible ${producto.cantidad}</p>
-            <button id="prod-${producto.id}" class="btnCompra">Comprar</button>
-            <div id="cantidad-${producto.id}" class="cantidadProd oculto"><button id="menos-${producto.id}">-</button><input type="number" readonly id="cant-${producto.id}" value="1"><button id="mas-${producto.id}">+</button></div>`//en el input de la cantidad tendria que ir producto.carrito
-            card.classList.add('card')
-            seccionProd && seccionProd.append(card);
-            eventoMasMenosCantidad(producto)
+        crearCard(producto)
+        eventoMasMenosCantidad(producto)
+        if(producto.carrito != 0){
+            console.log('prueba')
+            let input = document.getElementById(`cant-${producto.id}`);
+            input.value = producto.carrito;
+            btnCantidad(producto.id, false)
         }
     }
     eventoComprar(productos)
 }
 
 // tomo los valores que pone el usuario creo el producto y lo pusheo al array productos
-function cargarProd(){
+/* function cargarProd(){
         let id = codigo.value;
         let nombre = descripcion.value;
         let pcio = precio.value;
@@ -86,31 +118,24 @@ function cargarProd(){
         actualizarStorage();
         imprimir(productos);
 
-}
-let dolar = []
+} */
+
 const valorDolar = async () => {
     const resp = await fetch('https://www.dolarsi.com/api/api.php?type=valoresprincipales');
     const data = await resp.json();
     console.log(data) 
     dolar.push(...data)
     let valor
-    for (const d of dolar) {
-        d.casa.nombre == "Dolar Blue" && (valor = d.casa.venta)
+    for (const el of dolar) {
+        el.casa.nombre == "Dolar Blue" && (valor = el.casa.venta)
     }
-    console.log(valor)
     return valor   
 }
-//reseteo los input 
-const limpiar = () => {
-    codigo.value = "";
-    descripcion.value = "";
-    cantidad.value = "";
-    precio.value = "";
-}
+
 //funciones del carrito
 
-function totalCarrito(carrito){
-   const total = carrito.reduce((acc, el) => acc + el.precioIva, 0)
+function calcularTotal(carrito){
+   const total = carrito.reduce((acc, el) => acc + (el.precioIva * el.carrito), 0)
     return total;
 }
 async function totalEnDolares (tot){
@@ -120,10 +145,9 @@ async function totalEnDolares (tot){
     let dolarParseado = dolar.replace(',','.')
     dolarParseado = parseFloat(dolarParseado)
     let totalUSD = (tot / parseFloat(dolarParseado));
-    console.log(totalUSD)
     totalUSD = totalUSD.toFixed(2);
     console.log(totalUSD)
-    return totalUSD //ver esta fuction para calcular el total del dolar me falta llamarla y pasarle el param
+    return totalUSD 
 }
 
 function eliminarCarrito(prod){
@@ -134,9 +158,15 @@ function eliminarCarrito(prod){
    input.value = prod.carrito
    localStorage.setItem("carrito", JSON.stringify(carrito))
    carritoStorage();
-   mostrarCarrito(carrito) 
+   paginaCompleta.classList.contains('oculto') && mostrarCarrito(carrito) 
+   for (const el of productos) {
+       if(el.id == prod.id){
+           el.carrito = 0;
+       }
+   }
    console.log(carrito)
    console.log(prod)
+   notificacionCarrito()
 }
 
 function eventoEiminarCarrito(carrito){
@@ -160,24 +190,32 @@ function imprimirCarrito (carrito){
     }
 }
 
-async function mostrarCarrito(carrito){
-    carritoSeccion && (carritoSeccion.innerHTML = '') ;
-    imprimirCarrito(carrito)
-    eventoEiminarCarrito(carrito)
-    let totalC = totalCarrito(carrito)
+async function totalCarrito(carrito){
+    let totalC = calcularTotal(carrito)
     let total = document.createElement('div');
-    let totalUDS = await totalEnDolares(totalC)
-    
-    console.log(totalUDS)
-    let totalDolar = document.createElement('div');
     total.innerHTML = `<h3 class="w-33">TOTAL</h3>
     <p class="w-33">${totalC}</p>`;
+    
+    let totalUDS = await totalEnDolares(totalC)
+    let totalDolar = document.createElement('div');
     totalDolar.innerHTML = `<h3 class="w-33">TOTAL UDS</h3>
     <p class="w-33">${totalUDS}</p>`
+    console.log(totalUDS)
+    
     carritoSeccion.append(total);
     total.classList.add('carritoItem')
     carritoSeccion.append(totalDolar);
     totalDolar.classList.add('carritoItem')
+}
+async function mostrarCarrito(carrito){
+    carritoSeccion && (carritoSeccion.innerHTML = '') ;
+    if(carrito.length == 0){
+        carritoSeccion.innerHTML = `<h3>Tu carrito esta vacio</h3>`
+    }
+    imprimirCarrito(carrito)
+    await totalCarrito(carrito)
+    eventoEiminarCarrito(carrito)
+    mostrarOcultarCarrito(true)
 }
 //le paso la cantidad y agrego el producto al carrito 
 function cantidadCarritoModif (producto, modificacion=true){
@@ -187,9 +225,7 @@ function cantidadCarritoModif (producto, modificacion=true){
 }
 
 function agregarACarrito(producto){
-    console.log(producto)
     cantidadCarritoModif(producto)
-    console.log(typeof(producto.carrito))
     console.log(producto)
     carrito.push(producto)
     localStorage.setItem("carrito", JSON.stringify(carrito))
@@ -204,7 +240,11 @@ const eventoComprar = (productos) => {
         document.getElementById(`prod-${producto.id}`).addEventListener('click', () => {
             Toastify({
                 text: "tu producto se agrego al carrito",
-                duration: 3000
+                duration: 2000,
+                gravity: 'bottom',
+                style: {
+                    background: "red",
+                  }
                 }).showToast();
             producto.carrito = 0;    
             agregarACarrito(producto);
@@ -248,7 +288,7 @@ const eventoMasMenosCantidad = (producto) => {
         document.getElementById(`menos-${producto.id}`).addEventListener('click', () => {masMenosCantidad(producto, false)})
 }
 
-function btnCantidad(id){
+function btnCantidad(id, cambio = true){
     let btnCompra = document.getElementById(`prod-${id}`)
     let btnCantidad = document.getElementById(`cantidad-${id}`)
     if(btnCantidad.classList.contains('oculto')){
@@ -258,48 +298,91 @@ function btnCantidad(id){
         btnCompra.classList.remove('oculto')
         btnCantidad.classList.add('oculto')
     }
+    if(cambio == false){
+        btnCompra.classList.add('oculto')
+        btnCantidad.classList.remove('oculto')
+    }
+    
 }
 
 
 
 if(iconoCarrito){
     iconoCarrito.addEventListener('click',() => {
-    console.log(carrito)
-    console.log(carritoSeccion)
     mostrarCarrito(carrito)
 })
 }
 // filtrar los productos que quiero ver
 if(buscar){
 buscar.addEventListener('input', (e) => {
+    //ver como limpiar el filtro si input.length = 0 filtro= []vacio
     let prodABuscar = e.target.value;
     prodABuscar = prodABuscar.toUpperCase();
-    const filtro = productos.filter((prod) => prod.nombre.includes(prodABuscar));
+    let filtro = productos.filter((prod) => prod.nombre.includes(prodABuscar));
     seccionProd.innerHTML = "";
-    imprimir(filtro);
+    console.log(filtro)
+    console.log(productos)
+    console.log(prodABuscar.length)
+    prodABuscar.length == 0 ? imprimir(productos) : imprimir(filtro);
+    
 })
 }
-cargar && cargar.addEventListener('click', cargarProd);
+
 console.log(productos);
 console.log(carrito);
 
 imprimir(productos)
-//cuando empieza la pagina chekeo si hay algo en el carrito para mostrar el boton comprar o el +/-
-if(carrito.length != 0){
-    for (const prod of carrito) {
-        btnCantidad(prod.id)
-        let input = document.getElementById(`cant-${prod.id}`);
-        input.value = prod.carrito;
-    }
-}
-
-//iconoCarrito.addEventListener('click', )
+//mostrar el numero de productos que hay en el carrito en el icono
 const notificacionCarrito = () => {
     nroCarrito.innerHTML = carrito.length;
 }
 notificacionCarrito()
 
-valorDolar()
+function mostrarOcultarCarrito(accion) {
+    if(accion == true){
+        paginaCompleta.classList.add('oculto')
+        carritoCompleto.classList.remove('oculto')
+    }else{
+        paginaCompleta.classList.remove('oculto')
+        carritoCompleto.classList.add('oculto')
+    }
+}
+
+inicio.addEventListener('click', () => {mostrarOcultarCarrito(false)}) 
+
+//el final de la compra con un modal
+finalCompra.addEventListener('click', mostrarMetodosPago)
+
+function mostrarMetodosPago(){
+    let contenedorMetodos = document.createElement('div');
+    contenedorMetodos.innerHTML = `<div>Pago en efectivo $</div>
+                                    <div>Pago en US$</div>
+                                    <div>Pago por transferencia</div>`
+    cuerpoModal.append(contenedorMetodos)
+}
+
+//Mostrar las diferentes categorias de productos
+function mostrarCategoria(cat){
+    console.log(cat)
+    let categoriaAMostrar = productos.filter((el) => el.categoria == cat)
+    console.log(categoriaAMostrar)
+    imprimir(categoriaAMostrar)
+
+}
+
+celulares.addEventListener('click', () => {
+    let cat = 'CELULAR'
+    mostrarCategoria(cat)
+})
+
+notebook.addEventListener('click', () => {
+    let cat = 'NOTEBOOK'
+    mostrarCategoria(cat)
+})
+smartwatch.addEventListener('click', () => {
+    let cat = 'SMARTWATCH'
+    mostrarCategoria(cat)
+})
 //---------------------------------------------------------
 /* const busqueda = productos.filter((el) => el.nombre.includes(`MOTO`));
 console.log(`Busqueda de productos que contengan MOTO en el nombre ${JSON.stringify(busqueda)}`);
@@ -311,10 +394,5 @@ valor.forEach((el) => {console.log(el.nombre , el.precio)})
 
 const faltantes = productos.filter((el) => el.stock == false);
 console.log(`faltante ${JSON.stringify(faltantes)}`)
-
-     Toastify({
-        text: "This is a toast",
-        duration: 3000
-        }).showToast();
 
 */
