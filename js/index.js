@@ -88,10 +88,19 @@ function controlProductos(carrito, productos){
     console.log(carrito)
     console.log(productos)
 }
-function imprimir(productos) {
-    controlProductos(carrito, productos)
+let productosALaVista = []
+
+function imprimir(arrProductos, filtroBusqueda = true) {
+    controlProductos(carrito, arrProductos)
+    if(filtroBusqueda){
+        productosALaVista = [];
+        productosALaVista.push(...arrProductos)
+    }
+    console.log(arrProductos)
+    console.log(productosALaVista)
     seccionProd.innerHTML = "";
-    for (const producto of productos) {       
+    (arrProductos.length == productos.length) && (tituloSeccionDeProducos.innerHTML = "Productos");
+    for (const producto of arrProductos) {       
         crearCard(producto)
         eventoMasMenosCantidad(producto)
         if(producto.carrito != 0){
@@ -101,24 +110,25 @@ function imprimir(productos) {
             btnCantidad(producto.id, false)
         }
     }
-    eventoComprar(productos)
+    eventoComprar(arrProductos)
 }
-
-// tomo los valores que pone el usuario creo el producto y lo pusheo al array productos
-/* function cargarProd(){
-        let id = codigo.value;
-        let nombre = descripcion.value;
-        let pcio = precio.value;
-        let cant = cantidad.value;
-        let stock = true;
-        productos.push(new Producto(id, nombre, pcio, cant, stock));
+// filtrar los productos que quiero ver
+if(buscar){
+    buscar.addEventListener('input', (e) => {
+        //ver como limpiar el filtro si input.length = 0 filtro= []vacio
+        let prodABuscar = e.target.value;
+        prodABuscar = prodABuscar.toUpperCase();
+        let filtro = productosALaVista.filter((prod) => prod.nombre.includes(prodABuscar));
         seccionProd.innerHTML = "";
-        limpiar();
-        localStorage.setItem("listaDeProductos", JSON.stringify(productos))
-        actualizarStorage();
-        imprimir(productos);
+        console.log(filtro)
+        console.log(productos)
+        console.log(prodABuscar.length)
+        /* prodABuscar.length == 0 ? imprimir(productos) : */ imprimir(filtro, false);
+        
+    })
+    }
 
-} */
+
 
 const valorDolar = async () => {
     const resp = await fetch('https://www.dolarsi.com/api/api.php?type=valoresprincipales');
@@ -151,9 +161,11 @@ async function totalEnDolares (tot){
 }
 
 function eliminarCarrito(prod){
+    console.log(prod)
    const eliminarProd = carrito.findIndex((el) => el.id === prod.id)
    carrito.splice(eliminarProd, 1)
    prod.carrito = 0;
+   imprimir(productos)
    let input = document.getElementById(`cant-${prod.id}`);
    input.value = prod.carrito
    localStorage.setItem("carrito", JSON.stringify(carrito))
@@ -184,7 +196,7 @@ function imprimirCarrito (carrito){
         prodCarrito.innerHTML = `<h3 class="w-33">${prod.nombre}</h3> 
                                 <p class="w-33">$${prod.precioIva}</p> 
                                 <p id="cantEnCarrito-${prod.id}"class="w-33">${prod.carrito}</p>
-                                <button id="eliminar-${prod.id}" value="${prod.id}">Eliminar</button>`;
+                                <button id="eliminar-${prod.id}" >Eliminar</button>`;
         carritoSeccion.append(prodCarrito);
         prodCarrito.classList.add('carritoItem')
     }
@@ -194,12 +206,12 @@ async function totalCarrito(carrito){
     let totalC = calcularTotal(carrito)
     let total = document.createElement('div');
     total.innerHTML = `<h3 class="w-33">TOTAL</h3>
-    <p class="w-33">${totalC}</p>`;
+    <p id="totalPesos" class="w-33">${totalC}</p>`;
     
     let totalUDS = await totalEnDolares(totalC)
     let totalDolar = document.createElement('div');
     totalDolar.innerHTML = `<h3 class="w-33">TOTAL UDS</h3>
-    <p class="w-33">${totalUDS}</p>`
+    <p id="totalDolar" class="w-33">${totalUDS}</p>`
     console.log(totalUDS)
     
     carritoSeccion.append(total);
@@ -312,21 +324,7 @@ if(iconoCarrito){
     mostrarCarrito(carrito)
 })
 }
-// filtrar los productos que quiero ver
-if(buscar){
-buscar.addEventListener('input', (e) => {
-    //ver como limpiar el filtro si input.length = 0 filtro= []vacio
-    let prodABuscar = e.target.value;
-    prodABuscar = prodABuscar.toUpperCase();
-    let filtro = productos.filter((prod) => prod.nombre.includes(prodABuscar));
-    seccionProd.innerHTML = "";
-    console.log(filtro)
-    console.log(productos)
-    console.log(prodABuscar.length)
-    prodABuscar.length == 0 ? imprimir(productos) : imprimir(filtro);
-    
-})
-}
+
 
 console.log(productos);
 console.log(carrito);
@@ -348,17 +346,39 @@ function mostrarOcultarCarrito(accion) {
     }
 }
 
-inicio.addEventListener('click', () => {mostrarOcultarCarrito(false)}) 
+inicio.addEventListener('click', () => {mostrarOcultarCarrito(false)
+    imprimir(productos)
+}) 
 
+//btn continuar para elegir como pagar
+let totalEnPesos = 0;
+let totalEnDolar = 0;
+finalCompra.addEventListener('click', ()=>{ 
+    console.log('este es el boton de continuar')
+    let totalPesos = document.getElementById('totalPesos').innerHTML
+    totalEnPesos = parseFloat(totalPesos).toFixed(2)
+    let totalDolar = document.getElementById('totalDolar').innerHTML
+    totalEnDolar = parseFloat(totalDolar).toFixed(2)
+    console.log(totalEnDolar)
+    console.log(totalEnPesos)
+})
 //el final de la compra con un modal
-finalCompra.addEventListener('click', mostrarMetodosPago)
-
-function mostrarMetodosPago(){
-    let contenedorMetodos = document.createElement('div');
-    contenedorMetodos.innerHTML = `<div>Pago en efectivo $</div>
-                                    <div>Pago en US$</div>
-                                    <div>Pago por transferencia</div>`
-    cuerpoModal.append(contenedorMetodos)
+function mostrarMetodosPago(metodo){
+    let totalCompra
+    if (metodo == "Debe seleccionar un metodo de pago") {
+        cuerpoModal.innerHTML = "";
+        let contenedorMetodosError = document.createElement('div');
+        contenedorMetodosError.innerHTML = `<h3>${metodo}</h3>`
+        cuerpoModal.append(contenedorMetodosError)
+    }else{
+        cuerpoModal.innerHTML = "";
+        metodo == "Pesos" ? totalCompra = totalEnPesos : totalCompra = totalEnDolar;
+        console.log(totalCompra)
+        let contenedorMetodos = document.createElement('div');
+        contenedorMetodos.innerHTML = `<h3>Su compra fue realizada con exito</h3>
+                                        <p>Uds abono ${totalCompra} ${metodo}</p>`
+        cuerpoModal.append(contenedorMetodos)
+    }
 }
 
 //Mostrar las diferentes categorias de productos
@@ -369,20 +389,41 @@ function mostrarCategoria(cat){
     imprimir(categoriaAMostrar)
 
 }
-
+//func para volver directo del carrito a una de las categorias de prod
+function mostrarCategorias(){
+    paginaCompleta.classList.contains('oculto') && mostrarOcultarCarrito(false);
+}
 celulares.addEventListener('click', () => {
+    mostrarCategorias();
     let cat = 'CELULAR'
     mostrarCategoria(cat)
+    tituloSeccionDeProducos.innerHTML = "Celulares";
 })
 
 notebook.addEventListener('click', () => {
+    mostrarCategorias();
     let cat = 'NOTEBOOK'
     mostrarCategoria(cat)
+    tituloSeccionDeProducos.innerHTML = "Notebooks";
 })
 smartwatch.addEventListener('click', () => {
+    mostrarCategorias();
     let cat = 'SMARTWATCH'
     mostrarCategoria(cat)
+    tituloSeccionDeProducos.innerHTML = "Smartwatch";
 })
+
+
+//mostramos el modal con los datos de la compra depende lo que hayamos elegido
+let finCompra = document.getElementById('fin')
+fin.addEventListener('click', ()=> {
+    let radio = document.querySelector('input[name=formaPago]:checked');
+    let metodo;
+    radio ? metodo = radio.value : metodo = "Debe seleccionar un metodo de pago"
+    console.log(metodo)
+    mostrarMetodosPago(metodo)
+})
+
 //---------------------------------------------------------
 /* const busqueda = productos.filter((el) => el.nombre.includes(`MOTO`));
 console.log(`Busqueda de productos que contengan MOTO en el nombre ${JSON.stringify(busqueda)}`);

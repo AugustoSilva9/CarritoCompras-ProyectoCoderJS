@@ -16,6 +16,7 @@ let cuerpoModal = document.getElementById('cuerpoModal')
 let celulares = document.getElementById('celulares')
 let notebook = document.getElementById('notebook')
 let smartwatch = document.getElementById('smartwatch')
+let tituloSeccionDeProducos = document.getElementById('tituloSeccionDeProducos')
 let productos = [];
 let carrito = [];
 let dolar = [];

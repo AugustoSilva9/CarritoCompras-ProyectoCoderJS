@@ -131,3 +131,14 @@ h1 {
   width: 15%;
   font-weight: 500;
 }
+
+.formPago{
+  height: 5rem;
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 5%;
+  padding-right: 10%;
+}

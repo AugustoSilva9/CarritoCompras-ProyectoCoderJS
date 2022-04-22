@@ -104,7 +104,7 @@
             <input id="busqueda" type="text" placeholder="Buscar producto ">
         </section>
         
-        <h1>Productos</h1>
+        <h1 id="tituloSeccionDeProducos">Productos</h1>
         <section id="productos" class="contenedor w90">
             
         </section>
@@ -116,9 +116,25 @@
         </section>
 
         <div class="w90 d-flex justify-content-end">
-            <button type="button" id="finalCompra" class="btnFinalCompra" data-mdb-toggle="modal"  data-mdb-target="#metodoPago"> Finalizar Compra</button>
+            <button type="button" id="finalCompra" class="btnFinalCompra">Continuar</button>
         </div>
-        <div class="modal fade" id="metodoPago" tabindex="-1" aria-hidden="true">
+
+        <div class="w90 ">
+            <h2>Metodo de pago</h2>
+            <form action="" class="d-flex flex-column">
+                <div class="formPago">
+                    <label for="formaPago">Pago en pesos</label>
+                    <input type="radio" name="formaPago" id="1" value="Pesos">
+                </div>
+                <div class="formPago">
+                    <label for="formaPago">Pago en US$</label>
+                    <input type="radio" name="formaPago" id="2" value="Dolar">
+                </div>
+                <button type="button" id="fin" class="btnFinalCompra" data-mdb-toggle="modal"  data-mdb-target="#finCompra">Finalizar Compra</button>
+            </form>
+        </div>
+
+        <div class="modal fade" id="finCompra" tabindex="-1" aria-hidden="true">
         <div  class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
