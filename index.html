@@ -20,7 +20,7 @@
 <body>
 
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-secondary">
+    <nav class="navbar navbar-expand-lg navbar-dark fondoYLetra">
         <!-- Container wrapper -->
         <div class="container-fluid w90">
             <!-- Toggle button -->
@@ -36,7 +36,7 @@
             </button>
 
             <!-- Collapsible wrapper -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="collapse navbar-collapse fondoYLetra" id="navbarSupportedContent">
                 <!-- Navbar brand -->
                 <a class="navbar-brand mt-2 mt-lg-0" href="#">
                     <img
@@ -53,20 +53,20 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"  data-mdb-toggle="dropdown" aria-expanded="false"> Productos </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <ul class="dropdown-menu fondoYLetra" aria-labelledby="navbarDropdownMenuLink">
                           <li>
-                            <a id="celulares" class="dropdown-item" href="#">Celulares </a>
+                            <a id="celulares" class="dropdown-item fondoYLetra" href="#">Celulares </a>
                           </li>
                           <li>
-                            <a id="notebook" class="dropdown-item" href="#">Notebook</a>
+                            <a id="notebook" class="dropdown-item fondoYLetra" href="#">Notebook</a>
                           </li>
                           <li>
-                            <a id="smartwatch" class="dropdown-item" href="#">Smartwatch</a>
+                            <a id="smartwatch" class="dropdown-item fondoYLetra" href="#">Smartwatch</a>
                           </li>
                         </ul>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="#">Projects</a>
+                    <a class="nav-link" href="#">Admin</a>
                     </li>
                 </ul>
                 <!-- Left links -->
@@ -74,7 +74,7 @@
             <!-- Collapsible wrapper -->
 
             <!-- Right elements -->
-            <div class="d-flex align-items-center">
+            <div class="d-flex align-items-center fondoYLetra">
                 <!-- Icon -->
                 <a id="iconoCarrito" class="text-reset me-3 " href="#">
                     <i class="fas fa-shopping-cart fa-2x"></i>
@@ -115,42 +115,46 @@
             
         </section>
 
-        <div class="w90 d-flex justify-content-end">
-            <button type="button" id="finalCompra" class="btnFinalCompra">Continuar</button>
+        <div class="w90 d-flex justify-content-center">
+            <button type="button" id="continuarCompra" class="btn btn-rounded btnFinalCompra">Continuar</button>
         </div>
+    </div>
 
-        <div class="w90 ">
-            <h2>Metodo de pago</h2>
-            <form action="" class="d-flex flex-column">
-                <div class="formPago">
-                    <label for="formaPago">Pago en pesos</label>
-                    <input type="radio" name="formaPago" id="1" value="Pesos">
-                </div>
-                <div class="formPago">
-                    <label for="formaPago">Pago en US$</label>
-                    <input type="radio" name="formaPago" id="2" value="Dolar">
-                </div>
-                <button type="button" id="fin" class="btnFinalCompra" data-mdb-toggle="modal"  data-mdb-target="#finCompra">Finalizar Compra</button>
-            </form>
-        </div>
+    <div id="metodoDePago" class="w90 oculto">
+        <h1>Metodo de pago</h1>
+        <form action="" id="formulario" class="d-flex flex-column">
+            <div class="formPago">
+                <label for="formaPago">Pago en pesos</label>
+                <input type="radio" name="formaPago" id="1" value="Pesos">
+            </div>
+            <div class="formPago">
+                <label for="formaPago">Pago en US$</label>
+                <input type="radio" name="formaPago" id="2" value="Dolar">
+            </div>
+            <button type="button" id="finalCompra" class="btn btn-rounded btnFinalCompra" data-mdb-toggle="modal"  data-mdb-target="#finCompra">Finalizar Compra</button>
+        </form>
+    </div>
 
-        <div class="modal fade" id="finCompra" tabindex="-1" aria-hidden="true">
-        <div  class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Metodo de Pago</h5>
-                  <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div id="cuerpoModal" class="modal-body"></div>
-                    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-mdb-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
+    <div class="modal fade" id="finCompra" tabindex="-1" aria-hidden="true">
+    <div  class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <!-- <h5 class="modal-title" id="exampleModalLabel">Metodo de Pago</h5> -->
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="cuerpoModal" class="modal-body"></div>
+                <div class="modal-footer">
+                <button type="button" class="btn btnModal" data-mdb-dismiss="modal">Close</button>
+            <!--     <button type="button" class="btn btn-primary">Save changes</button> -->
                 </div>
             </div>
         </div>
-        
     </div>
+    
+    <footer>
+        <p>Lorem, ipsum dolor sit amet consectetur </p>
+    </footer>
+    
 
 
     <!-- MDB -->

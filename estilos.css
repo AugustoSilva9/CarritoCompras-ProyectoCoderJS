@@ -4,12 +4,19 @@
   box-sizing: border-box;
 }
 body {
-  background-color: lightblue;
+  background-color: rgb(220,220,220);
 }
 .oculto {
   display: none !important;
 }
-
+h1, h3, p {
+  color: rgb(25, 25, 25);
+}
+.fondoYLetra{
+  /* background-color: rgb(243, 29, 29); */
+  background-color: rgb(180, 0, 0) !important;
+  color: rgb(240,240,240);
+}
 .w90{
   width: 90% !important ;
   padding: 0;
@@ -17,6 +24,29 @@ body {
 }
 .navbar{
   height: 5rem;
+  background-color: rgb(180, 0, 0) !important;
+}
+#paginaCompleta {
+  margin-bottom: 2rem;
+}
+#carritoCompleto{
+  height: 78vh;
+}
+#metodoDePago{
+  height: 78vh;
+}
+footer{
+  height: 5rem;
+  background-color: rgb(180, 0, 0) !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+footer p {
+  color: rgb(240,240,240) !important;
+}
+.nav-link{
+  color: rgb(240,240,240) !important;
 }
 .notifCarrito{
   height: 1.2rem;
@@ -64,7 +94,7 @@ h1 {
 .card {
   background-color: white;
   margin: 1rem;
-  border: 1px solid black;
+ /*  border: 1px solid black; */
   width: 20rem;
 }
 .card h3 {
@@ -83,7 +113,9 @@ h1 {
   height: 16rem;
 }
 .btnCompra {
-  background-color: orangered;
+  background-color: rgb(243, 29, 29);
+  color: rgb(240,240,240);
+  font-size: 1rem;
   font-weight: bold;
   text-align: center;
   width: 40%;
@@ -91,16 +123,22 @@ h1 {
   margin: 1rem 30%;
 }
 .cantidadProd {
-  width: 50%;
+  width: 60%;
   margin: 1rem auto;
 }
-.cantidadProd button {
-  width: 25%;
+.btnCantidad {
+  background-color: rgb(243, 29, 29);
+  color: rgb(240,240,240);
+  width: 27%;
   height: 3rem;
   font-weight: bold;
+  font-size: 1.3rem;
+  text-align: center;
+  padding: 0;
 }
 .cantidadProd input {
-  width: 50%;
+  border: none;
+  width: 39%;
   height: 3rem;
   font-weight: bold;
   font-size: 2rem;
@@ -117,10 +155,25 @@ h1 {
   background-color: white;
   font-size: 24px;
 }
+.carritoItem i {
+  padding-right: 1rem;
+}
 .w-33 {
   width: 33%;
   text-align: center;
   margin: auto;
+}
+.totalItem {
+  padding-left: 50%;
+}
+.totalItem h3{
+  text-align: start;
+  font-size: 1.2rem !important;
+}
+.totalItem p{
+  text-align: start;
+  margin: auto;
+  font-size: 1.2rem !important;
 }
 .contenedorColumna {
   margin-top: 2rem;
@@ -128,10 +181,17 @@ h1 {
   flex-direction: column;
 }
 .btnFinalCompra{
-  width: 15%;
-  font-weight: 500;
+  background-color: rgb(243, 29, 29);
+  color: rgb(240,240,240);
+  height: 3rem;
+  width: 10rem;
+  font-size: 1rem;
+  font-weight: bold;
 }
-
+form .btnFinalCompra{
+  height: 4rem;
+  margin: 1rem auto 2rem ;
+}
 .formPago{
   height: 5rem;
   background-color: white;
@@ -141,4 +201,35 @@ h1 {
   justify-content: space-between;
   padding-left: 5%;
   padding-right: 10%;
+}
+.formPago input{
+  height: 1rem;
+  width: 1rem;
+}
+.formPago label{
+  font-size: 1.3rem;
+}
+.cuerpoModal{
+  text-align: center;
+}
+.cuerpoModal p{
+  font-size: 1.3rem;
+  color: rgb(25, 25, 25);
+}
+.btnModal{
+  background-color: rgb(243, 29, 29);
+  color: rgb(240,240,240) ;
+}
+
+@media screen and (max-width: 768px) {
+  .w90{
+      width: 100% !important;
+  }
+  .totalItem{
+    padding-left: 0;
+    padding: auto;
+  }
+  #busqueda{
+    width: 90%;
+  }
 }

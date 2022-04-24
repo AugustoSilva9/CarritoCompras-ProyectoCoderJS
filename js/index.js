@@ -63,9 +63,11 @@ function crearCard (producto){
     <h3>${producto.nombre}</h3>
     <p>Precion: $${producto.precio}</p>
     <p>Precio + IVA: $${producto.precioIva}</p>
-    <p>Cantidad disponible ${producto.cantidad}</p>
-    <button id="prod-${producto.id}" class="btnCompra">Comprar</button>
-    <div id="cantidad-${producto.id}" class="cantidadProd oculto"><button id="menos-${producto.id}">-</button><input type="number" readonly id="cant-${producto.id}" value="1"><button id="mas-${producto.id}">+</button></div>`//en el input de la cantidad tendria que ir producto.carrito
+    <button id="prod-${producto.id}" class="btn btnCompra btn-rounded">Comprar</button>
+    <div id="cantidad-${producto.id}" class="cantidadProd oculto">
+    <button type="button" id="menos-${producto.id}" class="btn btnCantidad">-</button>
+    <input type="number" readonly id="cant-${producto.id}" value="1">
+    <button type="button" id="mas-${producto.id}" class="btn btnCantidad">+</button></div>`//en el input de la cantidad tendria que ir producto.carrito
     card.classList.add('card')
     seccionProd && seccionProd.append(card);
 }
@@ -126,6 +128,9 @@ if(buscar){
         /* prodABuscar.length == 0 ? imprimir(productos) : */ imprimir(filtro, false);
         
     })
+    buscar.addEventListener('blur', ()=> {
+        buscar.value = "";
+    })
     }
 
 
@@ -145,7 +150,8 @@ const valorDolar = async () => {
 //funciones del carrito
 
 function calcularTotal(carrito){
-   const total = carrito.reduce((acc, el) => acc + (el.precioIva * el.carrito), 0)
+   let total = carrito.reduce((acc, el) => acc + (el.precioIva * el.carrito), 0)
+   total = total.toFixed(2)
     return total;
 }
 async function totalEnDolares (tot){
@@ -165,7 +171,7 @@ function eliminarCarrito(prod){
    const eliminarProd = carrito.findIndex((el) => el.id === prod.id)
    carrito.splice(eliminarProd, 1)
    prod.carrito = 0;
-   imprimir(productos)
+   paginaCompleta.classList.contains('oculto') && imprimir(productos)
    let input = document.getElementById(`cant-${prod.id}`);
    input.value = prod.carrito
    localStorage.setItem("carrito", JSON.stringify(carrito))
@@ -179,6 +185,14 @@ function eliminarCarrito(prod){
    console.log(carrito)
    console.log(prod)
    notificacionCarrito()
+   Toastify({
+    text: "tu producto se elimió del carrito",
+    duration: 1500,
+    gravity: 'bottom',
+    style: {
+        background: "red",
+      }
+    }).showToast();
 }
 
 function eventoEiminarCarrito(carrito){
@@ -196,7 +210,7 @@ function imprimirCarrito (carrito){
         prodCarrito.innerHTML = `<h3 class="w-33">${prod.nombre}</h3> 
                                 <p class="w-33">$${prod.precioIva}</p> 
                                 <p id="cantEnCarrito-${prod.id}"class="w-33">${prod.carrito}</p>
-                                <button id="eliminar-${prod.id}" >Eliminar</button>`;
+                                <i id="eliminar-${prod.id}" class="far fa-trash-alt "></i>`;
         carritoSeccion.append(prodCarrito);
         prodCarrito.classList.add('carritoItem')
     }
@@ -205,13 +219,15 @@ function imprimirCarrito (carrito){
 async function totalCarrito(carrito){
     let totalC = calcularTotal(carrito)
     let total = document.createElement('div');
-    total.innerHTML = `<h3 class="w-33">TOTAL</h3>
-    <p id="totalPesos" class="w-33">${totalC}</p>`;
+    total.innerHTML = `<h3 class="w-33">TOTAL</h3> <p>$</p>
+    <p id="totalPesos" class="w-33"> ${totalC}</p>`;
+    total.classList.add('totalItem')  
     
     let totalUDS = await totalEnDolares(totalC)
     let totalDolar = document.createElement('div');
-    totalDolar.innerHTML = `<h3 class="w-33">TOTAL UDS</h3>
-    <p id="totalDolar" class="w-33">${totalUDS}</p>`
+    totalDolar.innerHTML = `<h3 class="w-33">TOTAL UDS</h3><p>US$</p>
+    <p id="totalDolar" class="w-33"> ${totalUDS}</p>`
+    totalDolar.classList.add('totalItem') 
     console.log(totalUDS)
     
     carritoSeccion.append(total);
@@ -221,8 +237,10 @@ async function totalCarrito(carrito){
 }
 async function mostrarCarrito(carrito){
     carritoSeccion && (carritoSeccion.innerHTML = '') ;
+    continuarCompra.classList.remove('oculto')
     if(carrito.length == 0){
         carritoSeccion.innerHTML = `<h3>Tu carrito esta vacio</h3>`
+        continuarCompra.classList.add('oculto')
     }
     imprimirCarrito(carrito)
     await totalCarrito(carrito)
@@ -251,8 +269,8 @@ const eventoComprar = (productos) => {
     for (const producto of productos) {
         document.getElementById(`prod-${producto.id}`).addEventListener('click', () => {
             Toastify({
-                text: "tu producto se agrego al carrito",
-                duration: 2000,
+                text: "tu producto se agregó al carrito",
+                duration: 1500,
                 gravity: 'bottom',
                 style: {
                     background: "red",
@@ -277,6 +295,7 @@ function checkCantidad(prod, sumaResta) {
 }
 
 function masMenosCantidad ( producto, sumaResta){
+    console.log('evento mas menos')
     let input = document.getElementById(`cant-${producto.id}`);
     producto.carrito = checkCantidad(producto, sumaResta);
     console.log(producto)
@@ -337,6 +356,7 @@ const notificacionCarrito = () => {
 notificacionCarrito()
 
 function mostrarOcultarCarrito(accion) {
+    metodoDePago.classList.add('oculto')
     if(accion == true){
         paginaCompleta.classList.add('oculto')
         carritoCompleto.classList.remove('oculto')
@@ -353,7 +373,7 @@ inicio.addEventListener('click', () => {mostrarOcultarCarrito(false)
 //btn continuar para elegir como pagar
 let totalEnPesos = 0;
 let totalEnDolar = 0;
-finalCompra.addEventListener('click', ()=>{ 
+continuarCompra.addEventListener('click', ()=>{ 
     console.log('este es el boton de continuar')
     let totalPesos = document.getElementById('totalPesos').innerHTML
     totalEnPesos = parseFloat(totalPesos).toFixed(2)
@@ -361,6 +381,8 @@ finalCompra.addEventListener('click', ()=>{
     totalEnDolar = parseFloat(totalDolar).toFixed(2)
     console.log(totalEnDolar)
     console.log(totalEnPesos)
+    carritoCompleto.classList.add('oculto')
+    metodoDePago.classList.remove('oculto')
 })
 //el final de la compra con un modal
 function mostrarMetodosPago(metodo){
@@ -370,6 +392,7 @@ function mostrarMetodosPago(metodo){
         let contenedorMetodosError = document.createElement('div');
         contenedorMetodosError.innerHTML = `<h3>${metodo}</h3>`
         cuerpoModal.append(contenedorMetodosError)
+        cuerpoModal.classList.add('cuerpoModal')
     }else{
         cuerpoModal.innerHTML = "";
         metodo == "Pesos" ? totalCompra = totalEnPesos : totalCompra = totalEnDolar;
@@ -378,6 +401,7 @@ function mostrarMetodosPago(metodo){
         contenedorMetodos.innerHTML = `<h3>Su compra fue realizada con exito</h3>
                                         <p>Uds abono ${totalCompra} ${metodo}</p>`
         cuerpoModal.append(contenedorMetodos)
+        cuerpoModal.classList.add('cuerpoModal')
     }
 }
 
@@ -415,13 +439,24 @@ smartwatch.addEventListener('click', () => {
 
 
 //mostramos el modal con los datos de la compra depende lo que hayamos elegido
-let finCompra = document.getElementById('fin')
-fin.addEventListener('click', ()=> {
-    let radio = document.querySelector('input[name=formaPago]:checked');
+let finalCompra = document.getElementById('finalCompra')
+finalCompra.addEventListener('click', ()=> {
+    let opcion = document.querySelector('input[name=formaPago]:checked');
     let metodo;
-    radio ? metodo = radio.value : metodo = "Debe seleccionar un metodo de pago"
+    opcion ? metodo = opcion.value : metodo = "Debe seleccionar un metodo de pago"
     console.log(metodo)
     mostrarMetodosPago(metodo)
+    if(opcion){
+        let formulario = document.getElementById('formulario')
+        formulario.reset();
+        carrito = []
+        localStorage.setItem("carrito", JSON.stringify(carrito))
+        carritoStorage();
+        notificacionCarrito();
+        console.log(carrito)
+        mostrarOcultarCarrito(false)
+        imprimir(productos)
+    }    
 })
 
 //---------------------------------------------------------
